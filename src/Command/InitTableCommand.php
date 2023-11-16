@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Sunsgne\WebmanSmsSend\Command;
 use Exception;
-use Sunsgne\WebmanSmsSend\Support\Db;
+use support\Db;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\InputInterface;
@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Sunsgne\WebmanSmsSend\Model\MobileUserLoginLog;
-use Sunsgne\WebmanSmsSend\Support\Container;
+use support\Container;
 /**
  * @Time 2023/11/8 17:07
  * @author sunsgne
