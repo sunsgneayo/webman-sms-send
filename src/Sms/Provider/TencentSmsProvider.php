@@ -136,7 +136,7 @@ class TencentSmsProvider
             $content   = $msgClient->SendSms($this->request);
             return json_decode(json_encode($content), true);
         } catch (TencentCloudSDKException $exception) {
-            throw new TencentMsgException($exception->getMessage());
+            throw new SmsClientException($exception->getMessage());
         }
     }
 }
