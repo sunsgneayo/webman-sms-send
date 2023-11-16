@@ -74,6 +74,18 @@ class App
             'sms_type'            => $scenes
         ], ['template_id', 'template_name', 'sms_expired_time', 'sms_sign']);
 
+        # 没找到再找一次public模板
+        if (empty($temp['template_id']) and $scenes != 'public') {
+            $temp = SmsTemplate::firstByWhere([
+                'country_mobile_code' => $countryCode,
+                'language'            => $language,
+                'status'              => 1,
+                'app_package_name'    => $appPkgName,
+                'sms_type'            => 'public'
+            ], ['template_id', 'template_name', 'sms_expired_time', 'sms_sign']);
+        }
+
+
         if (empty($tempId = $temp['template_id'] ?? null)) {
             if (!config('plugin.sunsgne.webman-sms-send.app.sms.useDefaultTemp', false)) {
                 throw new SmsAppException('未找到短信模板ID', 404);
