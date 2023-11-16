@@ -36,7 +36,7 @@
 ### 开始
 #### 安装/引入
 ```shell
-composer require sunsgne/webman-sms-register
+composer require sunsgne/webman-sms-send
 ```
 #### 初始化数据表
 ⚠️：请务必使用`illuminate/database`也就是`laravel`的数据库`orm`, 可参照[webman官方文档](https://www.workerman.net/doc/webman/db/tutorial.html);
