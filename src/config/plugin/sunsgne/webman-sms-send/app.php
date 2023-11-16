@@ -10,7 +10,10 @@ return [
         # 是否使用默认模板
         'useDefaultTemp' => true,
         # 默认的发送模板ID
-        'defaultTempId'  => 1534804
+        'defaultTempId'  => 1534804,
+        # 默认的地区码
+        'defaultCountryCode'  => '',
+
     ],
     'limitIp' => [
         # 是否开启ip发送次数验证

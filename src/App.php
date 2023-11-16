@@ -40,19 +40,24 @@ class App
      */
     public static function SendSmsCodeByTencent(
         string $mobileNum,
-        string $countryCode,
+        ?string $countryCode,
         string $clientIp,
         string $appPkgName = '*',
         string $language = '*',
         string $scenes = 'public'
     ): array
     {
+        $countryCode = $countryCode ?: config('plugin.sunsgne.webman-sms-send.app.sms.defaultCountryCode');
+
+        if (empty($countryCode)){
+            throw new SmsAppException('国家编码不能为空');
+        }
 
         $mobile = ('+' . $countryCode . $mobileNum);
         if (!self::verifyClientIp($clientIp)) {
             throw new SmsAppException('当前IP超过最大发送次数');
         }
-        if (self::verifyRepeatSend($scenes, $mobile, $countryCode)) {
+        if (self::verifyRepeatSend($scenes, $mobileNum, $countryCode)) {
             throw new SmsAppException('请不要重复发送手机验证码', 400);
         }
 
@@ -264,6 +269,11 @@ class App
         }
         if (empty($log['code'])){
             throw new SmsAppException('手机号码验证失败', 404);
+        }
+        $expiredTime = config('plugin.sunsgne.webman-sms-send.app.sms.expiredTime' , self::$_expiredTime );
+
+        if ($log['create_time'] + $expiredTime > time()){
+            throw new SmsAppException('手机号码验证过期', 400);
         }
         if ($log['code'] != $vCode) {
             throw new SmsAppException('手机号码验证失败', 400);
