@@ -5,7 +5,6 @@ namespace Sunsgne\WebmanSmsRegister;
 
 use Exception;
 use RedisException;
-use Sunsgne\WebmanSmsRegister\Exception\CaptchaException;
 use Sunsgne\WebmanSmsRegister\Exception\SmsAppException;
 use Sunsgne\WebmanSmsRegister\Model\CountryMobile;
 use Sunsgne\WebmanSmsRegister\Model\MobileUsers;

@@ -184,7 +184,7 @@ App::GetCountryCodeList()
 #### 国家/地区区域码列表(以国家编号作为KEY)
 ```php
 use Sunsgne\WebmanSmsRegister\App;
-App::GetCountryCodeList()
+App::GetCountryCodeAsKeyList()
 ```
 返回的结构示例：
 ```json5
