@@ -87,7 +87,7 @@ class App
 
         self::saveSmsSendLog(
             result: $result, countryCode: (int)$countryCode,
-            scenes: $scenes, mobileNum: (int)$mobileNum , clientIp: $clientIp , code: $vCode
+            scenes: $scenes, mobileNum: (int)$mobileNum, code: $vCode, clientIp: $clientIp
         );
         return $result;
 
@@ -126,14 +126,16 @@ class App
 
     protected static function verifyRepeatSend(string $scenes, string $mobile, string $countryCode)
     {
+        $expiredTime = config('plugin.sunsgne.webman-sms-send.app.sms.expiredTime' , self::$_expiredTime );
         return SmsSendLog::query()->where(
             [
                 'scenes'              => $scenes,
                 'mobile'              => $mobile,
                 'country_mobile_code' => $countryCode,
-                'status'              => 1
+                'status'              => 1,
+
             ]
-        )->exists();
+        )->where('create_time' , '>=' , time() - $expiredTime )->exists();
     }
 
 
