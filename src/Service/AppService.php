@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
-namespace Sunsgne\WebmanSmsRegister\Service;
+namespace Sunsgne\WebmanSmsSend\Service;
 
-use Sunsgne\WebmanSmsRegister\Sms\SmsClient;
+use Sunsgne\WebmanSmsSend\Sms\SmsClient;
 
 /**
  * @Time 2023/11/13 17:05

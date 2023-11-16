@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Sunsgne\WebmanSmsRegister\Model;
+namespace Sunsgne\WebmanSmsSend\Model;
 
 
 use support\Db;

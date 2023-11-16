@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
-namespace Sunsgne\WebmanSmsRegister\Traits;
+namespace Sunsgne\WebmanSmsSend\Traits;
 
 
-use support\Redis;
+use Sunsgne\WebmanSmsSend\Support\Redis;
 
 trait OrmCurdTrait
 {

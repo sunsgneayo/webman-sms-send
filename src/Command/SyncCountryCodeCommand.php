@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace Sunsgne\WebmanSmsRegister\Command;
+namespace Sunsgne\WebmanSmsSend\Command;
 
 use Exception;
-use support\Db;
+use Sunsgne\WebmanSmsSend\Support\Db;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\InputInterface;
@@ -124,7 +124,7 @@ class SyncCountryCodeCommand extends Command
     private function getConfig(): array
     {
         $this->getJson2Config();
-        $config = config('plugin.sunsgne.webman-sms-register.country', []);
+        $config = config('plugin.sunsgne.webman-sms-send.country', []);
         if (empty($config)) {
             throw new Exception("config is empty.");
         }
@@ -147,7 +147,7 @@ class SyncCountryCodeCommand extends Command
      */
     protected function getJson2Config(): void
     {
-        $jsonString = file_get_contents(BASE_PATH . '/vendor/sunsgne/webman-sms-register/src/Lib/XYCountryCode.json');
+        $jsonString = file_get_contents(BASE_PATH . '/vendor/sunsgne/webman-sms-send/src/Lib/XYCountryCode.json');
         $dataArray  = json_decode($jsonString, true);
         $config     = [];
         foreach ($dataArray as $v) {
@@ -164,6 +164,6 @@ class SyncCountryCodeCommand extends Command
         }
         $phpCode = '<?php' . PHP_EOL . 'return ' . var_export($config, true) . ';' . PHP_EOL . '?>';
 
-        file_put_contents(BASE_PATH .'/config/plugin/sunsgne/webman-sms-register/country.php', $phpCode);
+        file_put_contents(BASE_PATH .'/config/plugin/sunsgne/webman-sms-send/country.php', $phpCode);
     }
 }

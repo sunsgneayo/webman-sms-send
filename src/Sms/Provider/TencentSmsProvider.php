@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace Sunsgne\WebmanSmsRegister\Sms\Provider;
+namespace Sunsgne\WebmanSmsSend\Sms\Provider;
 
-use Sunsgne\WebmanSmsRegister\Exception\SmsClientException;
-use support\package\message\exception\TencentMsgException;
+use Sunsgne\WebmanSmsSend\Exception\SmsClientException;
 use TencentCloud\Common\Credential;
 use TencentCloud\Common\Exception\TencentCloudSDKException;
 use TencentCloud\Sms\V20210111\Models\SendSmsRequest;

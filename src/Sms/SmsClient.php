@@ -1,9 +1,9 @@
 <?php
 
-namespace Sunsgne\WebmanSmsRegister\Sms;
+namespace Sunsgne\WebmanSmsSend\Sms;
 
-use Sunsgne\WebmanSmsRegister\Exception\SmsClientException;
-use Sunsgne\WebmanSmsRegister\Sms\Provider\TencentSmsProvider;
+use Sunsgne\WebmanSmsSend\Exception\SmsClientException;
+use Sunsgne\WebmanSmsSend\Sms\Provider\TencentSmsProvider;
 
 /**
  * @Time 2023/11/13 16:49

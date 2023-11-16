@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace Sunsgne\WebmanSmsRegister\Exception;
+namespace Sunsgne\WebmanSmsSend\Exception;
 
 /**
  * @Time 2023/11/13 16:51

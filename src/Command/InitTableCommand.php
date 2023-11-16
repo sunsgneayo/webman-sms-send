@@ -1,18 +1,17 @@
 <?php
 declare(strict_types=1);
 
-namespace Sunsgne\WebmanSmsRegister\Command;
+namespace Sunsgne\WebmanSmsSend\Command;
 use Exception;
-use support\Db;
+use Sunsgne\WebmanSmsSend\Support\Db;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Sunsgne\WebmanSmsRegister\Model\MobileUserLoginLog;
-use Sunsgne\WebmanSmsRegister\Model\SmsSendLog;
-use support\Container;
+use Sunsgne\WebmanSmsSend\Model\MobileUserLoginLog;
+use Sunsgne\WebmanSmsSend\Support\Container;
 /**
  * @Time 2023/11/8 17:07
  * @author sunsgne

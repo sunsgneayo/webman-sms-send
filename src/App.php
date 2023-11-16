@@ -1,19 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace Sunsgne\WebmanSmsRegister;
+namespace Sunsgne\WebmanSmsSend;
 
 use Exception;
-use RedisException;
-use Sunsgne\WebmanSmsRegister\Exception\SmsAppException;
-use Sunsgne\WebmanSmsRegister\Model\CountryMobile;
-use Sunsgne\WebmanSmsRegister\Model\MobileUsers;
-use Sunsgne\WebmanSmsRegister\Model\SmsSendLog;
-use Sunsgne\WebmanSmsRegister\Model\SmsTemplate;
-use Sunsgne\WebmanSmsRegister\Service\AppService;
+use Sunsgne\WebmanSmsSend\Exception\SmsAppException;
+use Sunsgne\WebmanSmsSend\Model\CountryMobile;
+use Sunsgne\WebmanSmsSend\Model\MobileUsers;
+use Sunsgne\WebmanSmsSend\Model\SmsSendLog;
+use Sunsgne\WebmanSmsSend\Model\SmsTemplate;
+use Sunsgne\WebmanSmsSend\Service\AppService;
 use support\Container;
-use support\RedisScope;
-use Tinywan\Captcha\Captcha;
 
 /**
  * @Time 2023/11/13 16:57
@@ -55,8 +52,7 @@ class App
         if (!self::verifyClientIp($clientIp)) {
             throw new SmsAppException('当前IP超过最大发送次数');
         }
-
-        if (RedisScope::list()->get("SMS:$scenes:$mobile")) {
+        if (self::verifyRepeatSend($scenes, $mobile, $countryCode)) {
             throw new SmsAppException('请不要重复发送手机验证码', 400);
         }
 
@@ -74,10 +70,10 @@ class App
         ], ['template_id', 'template_name', 'sms_expired_time', 'sms_sign']);
 
         if (empty($tempId = $temp['template_id'] ?? null)) {
-            if (!config('plugin.sunsgne.webman-sms-register.app.sms.useDefaultTemp', false)) {
+            if (!config('plugin.sunsgne.webman-sms-send.app.sms.useDefaultTemp', false)) {
                 throw new SmsAppException('未找到短信模板ID', 404);
             }
-            if (!($tempId = config('plugin.sunsgne.webman-sms-register.app.sms.defaultTempId'))) {
+            if (!($tempId = config('plugin.sunsgne.webman-sms-send.app.sms.defaultTempId'))) {
                 throw new SmsAppException('未配置默认的短信模板ID', 404);
             }
         }
@@ -86,19 +82,13 @@ class App
             (string)$tempId,
             $mobile,
             $vCode = self::generateCode(),
-            $temp['sms_sign'] ?? config('plugin.sunsgne.webman-sms-register.sms.tencent.signName')
+            $temp['sms_sign'] ?? config('plugin.sunsgne.webman-sms-send.sms.tencent.signName')
         );
 
-        RedisScope::list()->setEx(
-            "SMS:$scenes:$mobile",
-            $temp['sms_expired_time'] ?? self::$_expiredTime,
-            $vCode
-        );
         self::saveSmsSendLog(
             result: $result, countryCode: (int)$countryCode,
-            scenes: $scenes, mobileNum: (int)$mobileNum
+            scenes: $scenes, mobileNum: (int)$mobileNum , clientIp: $clientIp , code: $vCode
         );
-        self::syncIpSendNum($clientIp);
         return $result;
 
     }
@@ -113,43 +103,40 @@ class App
     protected static function verifyClientIp(string $clientIp): bool
     {
         # 不验证IP
-        if (!config('plugin.sunsgne.webman-sms-register.app.limitIp.enable', false)) {
+        if (!config('plugin.sunsgne.webman-sms-send.app.limitIp.enable', false)) {
             return true;
         }
-        $maxNum = config('plugin.sunsgne.webman-sms-register.app.limitIp.maxSendNum', 10);
+        $maxNum = config('plugin.sunsgne.webman-sms-send.app.limitIp.maxSendNum', 10);
 
-        $useNum = RedisScope::list()->get("SMS:$clientIp") ?? 0;
+        $duration = config('plugin.sunsgne.webman-sms-send.app.limitIp.duration', 24 * 60 * 60);
+
+        $useNum = SmsSendLog::query()->where(
+            [
+                ['create_time', '<', time() - $duration],
+                ['client_ip', '=', $clientIp]
+            ]
+        )->count();
+
         if ($useNum >= $maxNum) {
             return false;
         }
         return true;
     }
 
-    /**
-     * 同步Ip次数验证
-     * @param string $clientIp
-     * @return void
-     * @throws RedisException
-     * @Time 2023/11/16 14:44
-     * @author sunsgne
-     */
-    protected static function syncIpSendNum(string $clientIp): void
-    {
-        if (!config('plugin.sunsgne.webman-sms-register.app.limitIp.enable', false)) {
-            return;
-        }
-        $cacheKey = "SMS:$clientIp";
-        if (empty(RedisScope::list()->get($cacheKey))) {
-            RedisScope::list()->setex(
-                $cacheKey,
-                config('plugin.sunsgne.webman-sms-register.app.limitIp.duration', 24 * 60 * 60),
-                1
-            );
-        } else {
-            RedisScope::list()->incr($cacheKey);
-        }
 
+    protected static function verifyRepeatSend(string $scenes, string $mobile, string $countryCode)
+    {
+        return SmsSendLog::query()->where(
+            [
+                'scenes'              => $scenes,
+                'mobile'              => $mobile,
+                'country_mobile_code' => $countryCode,
+                'status'              => 1
+            ]
+        )->exists();
     }
+
+
 
     /**
      * 校验国家编号是否存在与手机号正则验证
@@ -202,10 +189,10 @@ class App
     private static function generateCode(): string
     {
         # 打乱字符串顺序
-        $shuffledString = str_shuffle(config('plugin.sunsgne.webman-sms-register.app.sms.rule', '0123456789'));
+        $shuffledString = str_shuffle(config('plugin.sunsgne.webman-sms-send.app.sms.rule', '0123456789'));
 
         # 截取前4位作为验证码
-        return substr($shuffledString, 0, config('plugin.sunsgne.webman-sms-register.app.sms.length', 4));
+        return substr($shuffledString, 0, config('plugin.sunsgne.webman-sms-send.app.sms.length', 4));
     }
 
 
@@ -219,7 +206,7 @@ class App
     public static function GetCountryCodeList(): array
     {
         $data = CountryMobile::query()->where(['status' => 1])->get();
-        return $data->isNotEmpty() ? $data->toArray() : config('plugin.sunsgne.webman-sms-register.country', []);
+        return $data->isNotEmpty() ? $data->toArray() : config('plugin.sunsgne.webman-sms-send.country', []);
     }
 
 
@@ -233,7 +220,7 @@ class App
     public static function GetCountryCodeAsKeyList(?string $flag = ''): array
     {
         $data   = CountryMobile::query()->where(['status' => 1])->get();
-        $list   = $data->isNotEmpty() ? $data->toArray() : config('plugin.sunsgne.webman-sms-register.country', []);
+        $list   = $data->isNotEmpty() ? $data->toArray() : config('plugin.sunsgne.webman-sms-send.country', []);
         $result = [];
         foreach ($list as $value) {
             $result[$value['country_code']] = [
@@ -266,13 +253,24 @@ class App
     {
         $mobile = ('+' . $countryCode . $mobileNum);
 
-        if (empty($result = RedisScope::list()->get("SMS:$scenes:$mobile"))) {
+
+        $log = SmsSendLog::query()->where([
+            'scenes' => $scenes,
+            'country_mobile_code' => (int)$countryCode,
+            'mobile' => (int)$mobileNum,
+            'status' => 1
+        ])->select('id' , 'code')->first();
+        if (!$log){
             throw new SmsAppException('手机号码验证失败', 404);
         }
-        if ($result != $vCode) {
+        if (empty($log['code'])){
+            throw new SmsAppException('手机号码验证失败', 404);
+        }
+        if ($log['code'] != $vCode) {
             throw new SmsAppException('手机号码验证失败', 400);
         }
-        RedisScope::list()->del("SMS:$scenes:$mobile");
+        $log->setAttribute('status' , 0);
+        $log->save();
 
     }
 
@@ -292,6 +290,7 @@ class App
     protected static function saveSmsSendLog(
         array   $result, int $countryCode,
         string  $scenes, int $mobileNum,
+        string  $code, string $clientIp,
         ?string $service = 'Tencent'
     ): void
     {
@@ -299,6 +298,8 @@ class App
             'country_mobile_code' => $countryCode,
             'mobile'              => $mobileNum,
             'scenes'              => $scenes,
+            'client_ip'           => $clientIp,
+            'code'                => $code,
             'create_time'         => time(),
             'update_time'         => time(),
             'sms_service'         => $service,

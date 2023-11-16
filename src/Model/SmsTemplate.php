@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
-namespace Sunsgne\WebmanSmsRegister\Model;
+namespace Sunsgne\WebmanSmsSend\Model;
 
 
-use Sunsgne\WebmanSmsRegister\Traits\OrmCurdTrait;
+use Sunsgne\WebmanSmsSend\Traits\OrmCurdTrait;
+
 use support\Model;
 
 /**

@@ -178,12 +178,12 @@ CREATE TABLE `sms_send_log` (
 ### API
 #### 国家/地区区域码列表
 ```php
-use Sunsgne\WebmanSmsRegister\App;
+use Sunsgne\WebmanSmsSend\App;
 App::GetCountryCodeList()
 ```
 #### 国家/地区区域码列表(以国家编号作为KEY)
 ```php
-use Sunsgne\WebmanSmsRegister\App;
+use Sunsgne\WebmanSmsSend\App;
 App::GetCountryCodeAsKeyList()
 ```
 返回的结构示例：
@@ -212,7 +212,7 @@ $status = App::VerifyLegalMobile('86' , '3255214');//bool
 
 #### 发送手机验证码
 ```php
-use Sunsgne\WebmanSmsRegister\App;
+use Sunsgne\WebmanSmsSend\App;
 try {
     App::SendSmsCodeByTencent(
         mobileNum: '15998908728',
@@ -226,7 +226,7 @@ try {
 
 #### 验证手机短信验证码
 ```php
-use Sunsgne\WebmanSmsRegister\App;
+use Sunsgne\WebmanSmsSend\App;
 try {
     App::VerifyMobileCode(
         countryCode: '86',  // 国家地区编码

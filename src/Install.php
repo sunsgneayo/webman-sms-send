@@ -1,6 +1,6 @@
 <?php
 
-namespace Sunsgne\WebmanSmsRegister;
+namespace Sunsgne\WebmanSmsSend;
 
 class Install
 {
@@ -11,7 +11,7 @@ class Install
      */
     protected static array $pathRelation
         = array(
-            'config/plugin/sunsgne/webman-sms-register' => 'config/plugin/sunsgne/webman-sms-register',
+            'config/plugin/sunsgne/webman-sms-send' => 'config/plugin/sunsgne/webman-sms-send',
 
         );
     /**
@@ -28,7 +28,6 @@ class Install
     public static function install()
     {
         static::installByRelation();
-        static::installByFileRelation();
     }
 
     /**
