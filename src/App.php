@@ -253,15 +253,12 @@ class App
         string $scenes, string $vCode
     ): void
     {
-        $mobile = ('+' . $countryCode . $mobileNum);
-
-
         $log = SmsSendLog::query()->where([
             'scenes' => $scenes,
             'country_mobile_code' => (int)$countryCode,
             'mobile' => (int)$mobileNum,
             'status' => 1
-        ])->select('id' , 'code')->first();
+        ])->select('id' , 'code')->orderBy('create_time','desc')->first();
         if (!$log){
             throw new SmsAppException('手机号码验证失败', 404);
         }
