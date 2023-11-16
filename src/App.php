@@ -112,7 +112,7 @@ class App
 
         $useNum = SmsSendLog::query()->where(
             [
-                ['create_time', '<', time() - $duration],
+                ['create_time', '>', time() - $duration],
                 ['client_ip', '=', $clientIp]
             ]
         )->count();
