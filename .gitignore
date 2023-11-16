@@ -1,0 +1,15 @@
+/.idea
+/.git
+/.vscode
+/vendor
+*.log
+.env
+*.yaml
+!/docker/*.yaml
+config.reload.lock
+/tests/tmp
+/tests/.phpunit.result.cache
+.phpunit.result.cache
+/public/openapi.json
+/*.local
+/cache
