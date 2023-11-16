@@ -2,7 +2,7 @@
   "name": "sunsgne/webman-sms-send",
   "type": "library",
   "license": "MIT",
-  "description": "Webman plugin sunsgne/webman-sms-register",
+  "description": "Webman plugin sunsgne/webman-sms-send",
   "require": {
     "php": ">=8.1",
     "tencentcloud/sms": "^3.0"
