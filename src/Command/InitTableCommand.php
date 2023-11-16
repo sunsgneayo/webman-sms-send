@@ -89,11 +89,13 @@ CREATE TABLE `sms_send_log` (
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '状态（1:正常；0：异常）',
   `sms_service` varchar(64) DEFAULT NULL COMMENT '短信发送服务方',
   `sms_response` json DEFAULT NULL COMMENT '发送请求之后的响应',
+  `client_ip` varchar(32) DEFAULT NULL COMMENT '客户端IP',
+  `code` varchar(16) DEFAULT NULL COMMENT '验证码',
   `create_time` int DEFAULT NULL COMMENT '创建时间',
   `update_time` int DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `c_m_s_index` (`country_mobile_code`,`mobile`,`scenes`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='短信发送记录表';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='短信发送记录表';
 doc,
 
     ];
