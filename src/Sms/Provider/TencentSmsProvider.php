@@ -57,7 +57,7 @@ class TencentSmsProvider
      */
     public function __construct()
     {
-        $config           = config('plugin.sunsgne.webman-sms-register.sms.tencent');
+        $config           = config('plugin.sunsgne.webman-sms-send.sms.tencent');
         if (empty($config)){
             throw new SmsClientException('未配置短信平台参数');
         }
