@@ -161,7 +161,7 @@ class App
      * @Time 2023/11/16 14:28
      * @author sunsgne
      */
-    public static function VerifyLegalMobile(string $countryCode, string $mobileNumber):bool
+    public static function VerifyLegalMobile(string $countryCode, string $mobileNumber): bool
     {
         //检查country是否存在
         $countryMobile = CountryMobile::query()
@@ -225,19 +225,44 @@ class App
 
 
     /**
+     * 返回国家编号作为key的列表，并可根据旗子前缀地址拼接
+     * @param string|null $flag
+     * @return array
+     * @Time 2023/11/16 15:50
+     * @author sunsgne
+     */
+    public static function GetCountryCodeAsKeyList(?string $flag = ''): array
+    {
+        $data   = CountryMobile::query()->where(['status' => 1])->get();
+        $list   = $data->isNotEmpty() ? $data->toArray() : config('plugin.sunsgne.webman-sms-register.country', []);
+        $result = [];
+        foreach ($list as $value) {
+            $result[$value['country_code']] = [
+                'country_name'        => json_decode($value['country_name']),
+                'country_name_zh'     => $value['country_name_zh'] ?? '',
+                'country_mobile_code' => $value['country_mobile_code'] ?? '',
+                'regex'               => $value['regex'] ?? '',
+                'national_flag'       => empty($value['national_flag']) ? '' : ($flag . $value['national_flag']),
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
      * 验证手机验证码
      *
      * @param string $countryCode 国家地区编码
      * @param string $mobileNum 手机号码
      * @param string $scenes 验证场景
-     * @param string|null $vCode 验证码
+     * @param string $vCode 验证码
      * @return void
      * @Time 2023/11/14 11:45
      * @author sunsgne
      */
     public static function VerifyMobileCode(
-        string    $countryCode, string $mobileNum,
-        string $scenes, ?string $vCode
+        string $countryCode, string $mobileNum,
+        string $scenes, string $vCode
     ): void
     {
         $mobile = ('+' . $countryCode . $mobileNum);
