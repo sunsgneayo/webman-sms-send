@@ -263,7 +263,7 @@ class App
             'country_mobile_code' => (int)$countryCode,
             'mobile' => (int)$mobileNum,
             'status' => 1
-        ])->select('id' , 'code')->orderBy('create_time','desc')->first();
+        ])->select('id' , 'code' , 'create_time')->orderBy('create_time','desc')->first();
         if (!$log){
             throw new SmsAppException('手机号码验证失败', 404);
         }
@@ -272,7 +272,7 @@ class App
         }
         $expiredTime = config('plugin.sunsgne.webman-sms-send.app.sms.expiredTime' , self::$_expiredTime );
 
-        if ($log['create_time'] + $expiredTime > time()){
+        if ( ($log['create_time'] + $expiredTime) < time()){
             throw new SmsAppException('手机号码验证过期', 400);
         }
         if ($log['code'] != $vCode) {
