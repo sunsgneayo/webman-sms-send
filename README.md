@@ -66,19 +66,28 @@ return [
     ]
 ];
 ```
-文件位置：**/config/plugin/sunsgne/webman-sms-register/sms.php**
+文件位置：**/config/plugin/sunsgne/webman-sms-sms/sms.php**
 #### 配置默认短信发送
 ```php
 return [
     'enable' => true,
+
     'sms'     => [
-        'length'         => 4,
+        # 是否发送短信
+        'sendSms'            => true,
+        # 验证码长度
+        'length'             => 4,
         # 根据以下字符生成验证码
-        'rule'           => '0123456789',
+        'rule'               => '0123456789',
+        # 默认的短信过期时间
+        'expiredTime'        => 5 * 60,
         # 是否使用默认模板
-        'useDefaultTemp' => true,
+        'useDefaultTemp'     => true,
         # 默认的发送模板ID
-        'defaultTempId'  => 1534804
+        'defaultTempId'      => 1534804,
+        # 默认的地区码
+        'defaultCountryCode' => '86',
+
     ],
     'limitIp' => [
         # 是否开启ip发送次数验证
