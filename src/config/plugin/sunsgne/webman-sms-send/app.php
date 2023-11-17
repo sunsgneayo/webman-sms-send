@@ -9,13 +9,14 @@ return [
         'length'             => 4,
         # 根据以下字符生成验证码
         'rule'               => '0123456789',
+        # 默认的短信过期时间
         'expiredTime'        => 5 * 60,
         # 是否使用默认模板
         'useDefaultTemp'     => true,
         # 默认的发送模板ID
         'defaultTempId'      => 1534804,
         # 默认的地区码
-        'defaultCountryCode' => '',
+        'defaultCountryCode' => '86',
 
     ],
     'limitIp' => [
