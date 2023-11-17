@@ -95,10 +95,22 @@ class App
             }
         }
 
+        # 生成验证码
+        $vCode = self::generateCode();
+
+        # 配置中模拟不发送短信
+        if (!config('plugin.sunsgne.webman-sms-send.app.sms.sendSms', true)) {
+            self::saveSmsSendLog(
+                result: [], countryCode: (int)$countryCode,
+                scenes: $scenes, mobileNum: (int)$mobileNum, code: $vCode, clientIp: $clientIp
+            );
+            return [];
+        }
+
         $result = $appService->SendSmsCodeByTencent(
             (string)$tempId,
             $mobile,
-            $vCode = self::generateCode(),
+            $vCode,
             $temp['sms_sign'] ?? config('plugin.sunsgne.webman-sms-send.sms.tencent.signName')
         );
 
