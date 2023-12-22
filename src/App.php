@@ -303,6 +303,7 @@ class App
             throw new SmsAppException('手机号码验证失败', 400);
         }
         $log->setAttribute('status' , 0);
+        $log->setAttribute('update_time' , time() );
         $log->save();
 
     }
