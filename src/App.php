@@ -102,7 +102,7 @@ class App
         if (!config('plugin.sunsgne.webman-sms-send.app.sms.sendSms', true)) {
             self::saveSmsSendLog(
                 result: [], countryCode: (int)$countryCode,
-                scenes: $scenes, mobileNum: (int)$mobileNum, code: $vCode, clientIp: $clientIp
+                scenes: $scenes, mobileNum: $mobileNum, code: $vCode, clientIp: $clientIp
             );
             return [];
         }
@@ -116,7 +116,7 @@ class App
 
         self::saveSmsSendLog(
             result: $result, countryCode: (int)$countryCode,
-            scenes: $scenes, mobileNum: (int)$mobileNum, code: $vCode, clientIp: $clientIp
+            scenes: $scenes, mobileNum: $mobileNum, code: $vCode, clientIp: $clientIp
         );
         return $result;
 
@@ -323,7 +323,7 @@ class App
      */
     protected static function saveSmsSendLog(
         array   $result, int $countryCode,
-        string  $scenes, int $mobileNum,
+        string  $scenes, string $mobileNum,
         string  $code, string $clientIp,
         ?string $service = 'Tencent'
     ): void
